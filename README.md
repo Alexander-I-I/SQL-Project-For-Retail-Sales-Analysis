@@ -50,7 +50,7 @@ CREATE TABLE retails_sales
 ```sql
 SELECT COUNT(*) FROM retails_sales;
 SELECT COUNT(DISTINCT customer_id) FROM retails_sales;
-
+SELECT DISTINCT category FROM retail_sales;
 
 SELECT * FROM retails_sales
 WHERE 
