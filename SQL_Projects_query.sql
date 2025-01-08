@@ -26,7 +26,7 @@ LIMIT 10;
 SELECT COUNT(*) 
 FROM retail_sales
 
--- -- Извлечение строк с пропущенными значениями (NULL) в ключевых столбцах для очистки данных
+-- Извлечение строк с пропущенными значениями (NULL) в ключевых столбцах для очистки данных
 SELECT * FROM retails_sales
 WHERE 
     sale_date IS NULL
@@ -66,7 +66,7 @@ WHERE
 
 -- Производим анализ данных
 -- Подсчёт общего количества всех продаж в таблице
-SELECT COUNT(*) as total_sales
+SELECT COUNT(*) AS total_sales
 FROM retails_sales;
 
 -- Подсчёт количества уникальных клиентов, совершивших покупки
@@ -92,14 +92,14 @@ WHERE category = 'Clothing'
 
 SELECT 
 	category,
-	sum(total_sale) as total_amount_by_category
+	SUM(total_sale) AS total_amount_by_category
 FROM retails_sales
 GROUP BY category
 ORDER BY category DESC;
 
 -- Вопрос 4. Напишите SQL-запрос, чтобы узнать средний возраст покупателей, которые приобрели товары из категории "Красота".
 SELECT
-	round(avg(age),2) as avg_age
+	ROUND(AVG(age),2) AS avg_age
 FROM retails_sales
 WHERE category = 'Beauty';
 
@@ -126,47 +126,47 @@ SELECT
 	avg_total_sale
 FROM(
 	SELECT
-		extract(year from sale_date) as year,
-		extract(month from sale_date) as month,
-		avg(total_sale) as avg_total_sale,
-		rank() over(partition by extract(year from sale_date) order by avg(total_sale) desc) as ranks_year
+		EXTRACT(year FROM sale_date) AS year,
+		EXTRACT(month FROM sale_date) AS month,
+		AVG(total_sale) AS avg_total_sale,
+		RANK() OVER(PARTITION BY  EXTRACT(year FROM sale_date) ORDER BY AVG(total_sale) DESC) AS ranks_year
 	FROM retails_sales
 	GROUP BY 
-		extract(year from sale_date),
-		extract(month from sale_date) 
+		EXTRACT(year FROM sale_date),
+		EXTRACT(month FROM sale_date)
 	)
 WHERE ranks_year = 1
 
 -- Вопрос 8. Напишите SQL-запрос, чтобы определить 5 лучших клиентов на основе наибольшего общего объема продаж.
 SELECT
 	customer_id,
-	sum(total_sale) as sum_total_sales
+	SUM(total_sale) AS sum_total_sales
 FROM retails_sales
 GROUP BY customer_id
-ORDER BY sum(total_sale) desc
+ORDER BY SUM(total_sale) DESC
 LIMIT 5
 
 -- Вопрос 9. Напишите SQL-запрос, чтобы найти количество уникальных клиентов, которые приобрели товары из каждой категории.
 SELECT
 	category,
-	count(distinct customer_id) as unique_customer
+	COUNT(distinct customer_id) AS unique_customer
 FROM retails_sales
 GROUP BY category
 
 -- Вопрос 10. Напишите SQL-запрос, чтобы определить количество заказов для каждой смены: утро (до 12:00), день (с 12:00 до 17:00), и вечер (после 17:00).
-WITH shifts_retails_sales as
+WITH shifts_retails_sales AS
 (
 	SELECT
 		*,
 		CASE
-			WHEN extract(hour from sale_time) < 12 THEN 'Утро'
-			WHEN extract(hour from sale_time) between 12 and 17 THEN 'День'
+			WHEN EXTRACT(hour from sale_time) < 12 THEN 'Утро'
+			WHEN EXTRACT(hour from sale_time) BETWEEN 12 AND 17 THEN 'День'
 			ELSE 'Вечер'
-		END as shift  
+		END AS shift  
 	FROM retails_sales
 )
 SELECT
 	shift,
-	count(shift) as count_shift
+	COUNT(shift) AS count_shift
 FROM shifts_retails_sales
 GROUP BY shift
