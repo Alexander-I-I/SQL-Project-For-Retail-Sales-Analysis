@@ -4,19 +4,19 @@ CREATE DATABASE project_sql;
 -- Создание таблицы
 DROP TABLE IF EXISTS retails_sales;
 CREATE TABLE retails_sales
-            (
-                transactions_id INT PRIMARY KEY,	
-                sale_date DATE,	 
-                sale_time TIME,	
-                customer_id	INT,
-                gender	VARCHAR(15),
-                age	INT,
-                category VARCHAR(15),	
-                quantity	INT,
-                price_per_unit FLOAT,	
-                cogs	FLOAT,
-                total_sale FLOAT
-            );
+	(
+	    transactions_id INT PRIMARY KEY,
+	    sale_date DATE,
+	    sale_time TIME ,
+	    customer_id INT,
+	    gender VARCHAR(15),
+	    age INT CHECK (age >= 0 AND age <= 120),
+	    category VARCHAR(15),
+	    quantity INT CHECK (quantity > 0),
+	    price_per_unit DECIMAL(10,2) CHECK (price_per_unit >= 0),
+	    cogs DECIMAL(10,2) CHECK (cogs >= 0),
+	    total_sale DECIMAL(10,2) CHECK (total_sale >= 0)
+	);
 
 SELECT * 
 FROM retails_sales
